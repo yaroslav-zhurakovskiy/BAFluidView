@@ -15,8 +15,7 @@ let package = Package(
     targets: [
         .target(
             name: "BAFluidView",
-            dependencies: [],
-            path: "Pod/Classes"
+            dependencies: []
         )
     ]
 )
