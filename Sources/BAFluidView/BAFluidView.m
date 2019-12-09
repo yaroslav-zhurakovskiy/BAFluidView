@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-#import "BAFluidView.h"
+#import "include/BAFluidView.h"
 #import "UIColor+ColorWithHex.h"
 #import "Constants.h"
 #import <CoreMotion/CoreMotion.h>
