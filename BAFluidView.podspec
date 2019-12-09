@@ -15,8 +15,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.social_media_url = 'https://twitter.com/brantigua'
 
-  s.source_files = 'Sources/BAFluidView/**/*.m'
+  s.source_files = 'Sources/BAFluidView/**/*.{h,m}'
 
-  s.public_header_files = 'Sources/BAFluidView/include/**/*.h'
   s.frameworks = 'UIKit'
 end

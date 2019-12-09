@@ -28,9 +28,9 @@
 NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 100000
-@NSIntegererface BAFluidView()
+@interface BAFluidView()
 #else
-@NSIntegererface BAFluidView() <CAAnimationDelegate>
+@interface BAFluidView() <CAAnimationDelegate>
 #endif
 
 @property (strong,nonatomic) UIView *rootView;
@@ -217,7 +217,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 - (void)initialize {
     //find root view - the waves look weird if you go only by the size of the container
-    //Also depending on how the view is initialized. You can find the root view NSIntegerwo ways.
+    //Also depending on how the view is initialized. You can find the root view intwo ways.
     self.rootView = [self.window.subviews objectAtIndex:0];
     if (!self.rootView) {
         self.rootView = self;
@@ -251,7 +251,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     self.amplitudeArray = [NSArray arrayWithArray:[self createAmplitudeOptions]];
     
     //creating a linelayer frame
-    self.lineLayer.anchorPoNSInteger= CGPoNSIntegerMake(0, 0);
+    self.lineLayer.anchorPoint= CGPointMake(0, 0);
     CGRect frame = CGRectMake(0, CGRectGetHeight(self.bounds), self.finalX, CGRectGetHeight(self.rootView.frame));
     self.lineLayer.frame = frame;
     //    self.lineLayer.transform = CATransform3DMakeScale(1.02, 1.02, 1);
@@ -274,8 +274,8 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 - (void)startTiltAnimation {
     
-    //linelayer can't be manipulated without changing it's anchor poNSInteger
-    //instead we put the linelayer in a layer we can change the anchor poNSInteger on
+    //linelayer can't be manipulated without changing it's anchor point
+    //instead we put the linelayer in a layer we can change the anchor point on
     if(!self.rollLayer){
         //creating layer which will rotate
         self.rollLayer = CALayer.layer;
@@ -371,7 +371,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     float finalPosition;
     finalPosition = (1.0 - fillPercentage.doubleValue)*CGRectGetHeight(self.bounds);
     
-    //bit hard to define a hard endpoNSInteger with the dynamic waves
+    //bit hard to define a hard endpoint with the dynamic waves
     if ([self.fillLevel  isEqual: @1.0]){
         finalPosition = finalPosition - 2*self.maxAmplitude;
     }
@@ -426,7 +426,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     self.finalX = 5*self.waveLength;
     
     //creating the linelayer/rollLayer frame to fit new orientation
-    self.lineLayer.anchorPoNSInteger= CGPoNSIntegerMake(0, 0);
+    self.lineLayer.anchorPoint= CGPointMake(0, 0);
     CGRect frame = CGRectMake(0, CGRectGetHeight(self.bounds), self.finalX, CGRectGetHeight(self.rootView.frame));
     self.lineLayer.frame = frame;
     
@@ -533,14 +533,14 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 }
 
 - (NSArray*)getBezierPathValues {
-    //creating wave starting poNSInteger
-    CGPoNSInteger startPoNSInteger;
-    startPoNSInteger = CGPoNSIntegerMake(0,0);
+    //creating wave starting point
+    CGPoint startPoint;
+    startPoint = CGPointMake(0,0);
     
     //grabbing random amplitude to shrink/grow to
-    NSNumber *index = [NSNumber numberWithInt:arc4random_uniform((u_NSInteger32_t)self.amplitudeArray.count)];
+    NSNumber *index = [NSNumber numberWithInt:arc4random_uniform((u_int32_t)self.amplitudeArray.count)];
     
-    NSInteger finalAmplitude = [[self.amplitudeArray objectAtIndex:index.NSIntegerValue] NSIntegerValue];
+    NSInteger finalAmplitude = [[self.amplitudeArray objectAtIndex:index.intValue] intValue];
     NSMutableArray *values = [[NSMutableArray alloc] init];
     
     //shrinking
@@ -548,16 +548,16 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
         for (NSInteger j = self.startingAmplitude; j >= finalAmplitude; j-=self.amplitudeIncrement) {
             //create a UIBezierPath along distance
             UIBezierPath* line = [UIBezierPath bezierPath];
-            [line moveToPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x, startPoNSInteger.y)];
+            [line moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
             
             NSInteger tempAmplitude = j;
             for (NSInteger i = self.waveLength/2; i <= self.finalX; i+=self.waveLength/2) {
-                [line addQuadCurveToPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x + i,startPoNSInteger.y) controlPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x + i - (self.waveLength/4),startPoNSInteger.y + tempAmplitude)];
+                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i - (self.waveLength/4),startPoint.y + tempAmplitude)];
                 tempAmplitude = -tempAmplitude;
             }
             
-            [line addLineToPoNSInteger:CGPoNSIntegerMake(self.finalX, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
-            [line addLineToPoNSInteger:CGPoNSIntegerMake(0, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
+            [line addLineToPoint:CGPointMake(self.finalX, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
+            [line addLineToPoint:CGPointMake(0, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
             [line closePath];
             
             [values addObject:(id)line.CGPath];
@@ -569,16 +569,16 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
         for (NSInteger j = self.startingAmplitude; j <= finalAmplitude; j+=self.amplitudeIncrement) {
             //create a UIBezierPath along distance
             UIBezierPath* line = [UIBezierPath bezierPath];
-            [line moveToPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x, startPoNSInteger.y)];
+            [line moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
             
             NSInteger tempAmplitude = j;
             for (NSInteger i = self.waveLength/2; i <= self.finalX; i+=self.waveLength/2) {
-                [line addQuadCurveToPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x + i,startPoNSInteger.y) controlPoNSInteger:CGPoNSIntegerMake(startPoNSInteger.x + i -(self.waveLength/4),startPoNSInteger.y + tempAmplitude)];
+                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i -(self.waveLength/4),startPoint.y + tempAmplitude)];
                 tempAmplitude = -tempAmplitude;
             }
             
-            [line addLineToPoNSInteger:CGPoNSIntegerMake(self.finalX, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
-            [line addLineToPoNSInteger:CGPoNSIntegerMake(0, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
+            [line addLineToPoint:CGPointMake(self.finalX, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
+            [line addLineToPoint:CGPointMake(0, 5*CGRectGetHeight(self.rootView.frame) - self.maxAmplitude)];
             [line closePath];
             
             [values addObject:(id)line.CGPath];
@@ -621,7 +621,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (NSArray*)createAmplitudeOptions {
     NSMutableArray *tempAmplitudeArray = [[NSMutableArray alloc] init];
     for (NSInteger i = self.minAmplitude; i <= self.maxAmplitude; i+= self.amplitudeIncrement) {
-        [tempAmplitudeArray addObject:[NSNumber numberWithInt:i]];
+        [tempAmplitudeArray addObject:[NSNumber numberWithInteger:i]];
     }
     return tempAmplitudeArray;
 }

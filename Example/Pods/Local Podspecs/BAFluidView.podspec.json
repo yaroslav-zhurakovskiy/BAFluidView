@@ -23,7 +23,6 @@
   },
   "requires_arc": true,
   "social_media_url": "https://twitter.com/brantigua",
-  "source_files": "Sources/BAFluidView/**/*.m",
-  "public_header_files": "Sources/BAFluidView/include/**/*.h",
+  "source_files": "Sources/BAFluidView/**/*.{h,m}",
   "frameworks": "UIKit"
 }
