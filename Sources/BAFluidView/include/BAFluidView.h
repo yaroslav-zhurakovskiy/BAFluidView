@@ -23,6 +23,8 @@
 #import "Constants.h"
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface BAFluidView : UIView
 
 
@@ -152,3 +154,5 @@ This method can set all the default values prior to start of animation
 - (void)initialize;
 
 @end
+
+NS_ASSUME_NONNULL_END
