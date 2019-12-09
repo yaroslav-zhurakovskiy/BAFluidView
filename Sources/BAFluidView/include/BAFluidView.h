@@ -61,17 +61,17 @@ Changes the fill color of the wave animation
 /**
  Changes the interval between Max and Min the random function will use
  */
-@property (assign,nonatomic) int amplitudeIncrement;
+@property (assign,nonatomic) NSInteger amplitudeIncrement;
 
 /**
  Changes the maximum wave crest
  */
-@property (assign,nonatomic) int maxAmplitude;
+@property (assign,nonatomic) NSInteger maxAmplitude;
 
 /**
  Changes the minimum wave crest
  */
-@property (assign,nonatomic) int minAmplitude;
+@property (assign,nonatomic) NSInteger minAmplitude;
 
 /**
  Notification message string for tilt animations
@@ -91,7 +91,7 @@ extern NSString * const kBAFluidViewCMMotionUpdate;
  Lets you chose the interval between Max and Min the random function will use
  @return a fluid view object with the properties defined
  */
-- (instancetype)initWithFrame:(CGRect)aRect maxAmplitude:(int)maxAmplitude minAmplitude:(int)minAmplitude amplitudeIncrement:(int)amplitudeIncrement;
+- (instancetype)initWithFrame:(CGRect)aRect maxAmplitude:(NSInteger)maxAmplitude minAmplitude:(NSInteger)minAmplitude amplitudeIncrement:(NSInteger)amplitudeIncrement;
 
 /**
  Returns an object that can create the fluid animation with the given wave properties. This init function lets you adjust starting elevation. The other parameters have default values.
@@ -119,7 +119,7 @@ extern NSString * const kBAFluidViewCMMotionUpdate;
  The starting point of the fluid animation
  @return a fluid view object with the properties defined
  */
-- (instancetype)initWithFrame:(CGRect)aRect maxAmplitude:(int)aMaxAmplitude minAmplitude:(int)aMinAmplitude amplitudeIncrement:(int)aAmplitudeIncrement startElevation:(NSNumber*)aStartElevation;
+- (instancetype)initWithFrame:(CGRect)aRect maxAmplitude:(NSInteger)aMaxAmplitude minAmplitude:(NSInteger)aMinAmplitude amplitudeIncrement:(NSInteger)aAmplitudeIncrement startElevation:(NSNumber*)aStartElevation;
 
 /**
 This method lets you choose to what level you want the fluidVIew to increase or decrease to (based on starting elevation)
