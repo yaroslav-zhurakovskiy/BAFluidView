@@ -532,10 +532,20 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     
 }
 
+- (BOOL)isWaveLengthInvalid {
+    return ((NSInteger)self.waveLength) / 2 == 0;
+}
+
+- (CGFloat)fixedWaveLength {
+    return [self isWaveLengthInvalid] ? CGRectGetWidth([[UIScreen mainScreen] bounds]) : self.waveLength;
+}
+
 - (NSArray*)getBezierPathValues {
     //creating wave starting point
     CGPoint startPoint;
     startPoint = CGPointMake(0,0);
+    
+    CGFloat waveLength = [self fixedWaveLength];
     
     //grabbing random amplitude to shrink/grow to
     NSNumber *index = [NSNumber numberWithInt:arc4random_uniform((u_int32_t)self.amplitudeArray.count)];
@@ -551,8 +561,8 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
             [line moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
             
             NSInteger tempAmplitude = j;
-            for (NSInteger i = self.waveLength/2; i <= self.finalX; i+=self.waveLength/2) {
-                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i - (self.waveLength/4),startPoint.y + tempAmplitude)];
+            for (NSInteger i = waveLength/2; i <= self.finalX; i+=waveLength/2) {
+                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i - (waveLength/4),startPoint.y + tempAmplitude)];
                 tempAmplitude = -tempAmplitude;
             }
             
@@ -572,8 +582,8 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
             [line moveToPoint:CGPointMake(startPoint.x, startPoint.y)];
             
             NSInteger tempAmplitude = j;
-            for (NSInteger i = self.waveLength/2; i <= self.finalX; i+=self.waveLength/2) {
-                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i -(self.waveLength/4),startPoint.y + tempAmplitude)];
+            for (NSInteger i = waveLength/2; i <= self.finalX; i+=waveLength/2) {
+                [line addQuadCurveToPoint:CGPointMake(startPoint.x + i,startPoint.y) controlPoint:CGPointMake(startPoint.x + i -(waveLength/4),startPoint.y + tempAmplitude)];
                 tempAmplitude = -tempAmplitude;
             }
             
