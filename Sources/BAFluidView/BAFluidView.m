@@ -216,15 +216,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 #pragma mark - Public
 
 - (void)initialize {
-    //find root view - the waves look weird if you go only by the size of the container
-    //Also depending on how the view is initialized. You can find the root view intwo ways.
-    self.rootView = [self.window.subviews lastObject];
-    if (!self.rootView) {
-        self.rootView = self;
-        while (self.rootView.superview != nil) {
-            self.rootView = self.rootView.superview;
-        }
-    }
+    [self resetRootView];
     
     self.orientation = [[UIDevice currentDevice] orientation];
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -401,6 +393,18 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 #pragma mark - Private
 
+- (void)resetRootView {
+    //find root view - the waves look weird if you go only by the size of the container
+    //Also depending on how the view is initialized. You can find the root view intwo ways.
+    self.rootView = [self.window.subviews lastObject];
+    if (!self.rootView) {
+        self.rootView = self;
+        while (self.rootView.superview != nil) {
+            self.rootView = self.rootView.superview;
+        }
+    }
+}
+
 - (void)updateStartElevation:(NSNumber *)startElevation {
     self.startElevation = startElevation;
     CGRect frame = self.lineLayer.frame;
@@ -413,13 +417,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (void)reInitializeLayer {
     //This method occurs when the device is rotated
     
-    self.rootView = [self.window.subviews objectAtIndex:0];
-    if (!self.rootView) {
-        self.rootView = self;
-        while (self.rootView.superview != nil) {
-            self.rootView = self.rootView.superview;
-        }
-    }
+    [self resetRootView];
     
     //values that need to be adjusted due to change in width
     self.waveLength = CGRectGetWidth(self.rootView.frame);
