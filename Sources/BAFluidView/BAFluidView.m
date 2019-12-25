@@ -152,18 +152,12 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    //layout only if device has change orientation
-    if(self.orientation != [[UIDevice currentDevice] orientation]){
-        
-        self.orientation = [[UIDevice currentDevice] orientation];
-        
-        //I can either remove the animation and have a slight lag or the user can see one animation where the wave
-        //still has the frame of the old orientation.
-        [self stopAnimation];
-        [self reInitializeLayer];
-        [self updateRollAdjustmentBasedOnOrientation];
-        [self startAnimation];
-    }
+    //I can either remove the animation and have a slight lag or the user can see one animation where the wave
+    //still has the frame of the old orientation.
+    [self stopAnimation];
+    [self reInitializeLayer];
+    [self updateRollAdjustmentBasedOnOrientation];
+    [self startAnimation];
 }
 
 
@@ -353,7 +347,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 - (void)fillTo:(NSNumber*)fillPercentage {
     float fillDifference = fabs(fillPercentage.floatValue-self.fillLevel.floatValue);
-    if(fillDifference == 0){
+    if(fillDifference == 0) {
         //no change
         return;
     }
@@ -396,13 +390,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (void)resetRootView {
     //find root view - the waves look weird if you go only by the size of the container
     //Also depending on how the view is initialized. You can find the root view intwo ways.
-    self.rootView = [self.window.subviews lastObject];
-    if (!self.rootView) {
-        self.rootView = self;
-        while (self.rootView.superview != nil) {
-            self.rootView = self.rootView.superview;
-        }
-    }
+    self.rootView = self;
 }
 
 - (void)updateStartElevation:(NSNumber *)startElevation {
