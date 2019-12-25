@@ -53,8 +53,6 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 @property (strong,nonatomic) CAKeyframeAnimation *waveCrestAnimation;
 
-@property (assign,nonatomic) UIDeviceOrientation orientation;
-
 @property (assign,nonatomic) NSTimer *waveCrestTimer;
 
 @property (assign,nonatomic) BAFLUIDVIEWHORIZONTALDIRECTION waveDirection;
@@ -212,7 +210,6 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (void)initialize {
     [self resetRootView];
     
-    self.orientation = [[UIDevice currentDevice] orientation];
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     // create the wave layer and make it blue
@@ -581,7 +578,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 - (void)updateRollAdjustmentBasedOnOrientation {
     
-    switch (self.orientation) {
+    switch ([[UIDevice currentDevice] orientation]) {
         case UIDeviceOrientationPortrait:
         {
             self.rollOrientationAdjustment = 0;
