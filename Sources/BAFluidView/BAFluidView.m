@@ -63,6 +63,8 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 
 @property (strong,nonatomic) CALayer *rollLayer;
 
+@property (assign, nonatomic) CGSize previousSize;
+
 @end
 
 @implementation BAFluidView
@@ -150,6 +152,18 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    CGSize newSize = self.bounds.size;
+    
+    if (CGSizeEqualToSize(self.previousSize, CGSizeZero)) {
+        [self applyLayoutSubviews];
+    } else if (!CGSizeEqualToSize(self.previousSize, newSize)) {
+        [self applyLayoutSubviews];
+    }
+    
+    self.previousSize = newSize;
+}
+
+- (void)applyLayoutSubviews {
     //I can either remove the animation and have a slight lag or the user can see one animation where the wave
     //still has the frame of the old orientation.
     [self stopAnimation];
@@ -342,17 +356,15 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     [self.lineLayer removeAnimationForKey:@"verticalAnimation"];
 }
 
-- (void)fillTo:(NSNumber*)fillPercentage {
+- (void)fillTo:(NSNumber*)fillPercentage  {
     float fillDifference = fabs(fillPercentage.floatValue-self.fillLevel.floatValue);
     if(fillDifference == 0) {
         //no change
         return;
     }
     self.fillLevel = fillPercentage;
-    CAKeyframeAnimation *verticalAnimation =
-    [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
-    float finalPosition;
-    finalPosition = (1.0 - fillPercentage.doubleValue)*CGRectGetHeight(self.bounds);
+    
+    CGFloat finalPosition = (1.0 - fillPercentage.doubleValue) * CGRectGetHeight(self.bounds);
     
     //bit hard to define a hard endpoint with the dynamic waves
     if ([self.fillLevel  isEqual: @1.0]){
@@ -362,15 +374,11 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
         finalPosition = finalPosition - self.maxAmplitude;
     }
     
-    
     //fill animation
     //the animation glitches because the horizontal x of the layer is never in the same spot at the end of the animation. We can use the presentation layer to get the current x. This isn't what the presentation layer is for, but can't find a way to make a smooth transition.
-    CALayer *initialLayer = self.lineLayer;
+    CALayer *initialLayer = !self.initialFill ? self.lineLayer.presentationLayer : self.lineLayer;
     
-    if (!self.initialFill) {
-        initialLayer = self.lineLayer.presentationLayer;
-    }
-    
+    CAKeyframeAnimation *verticalAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position.y"];
     verticalAnimation.values = @[@(initialLayer.position.y),@(finalPosition)];
     verticalAnimation.duration = self.fillDuration*fillDifference;
     verticalAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -379,6 +387,7 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
     verticalAnimation.removedOnCompletion = NO;
     verticalAnimation.fillMode = kCAFillModeForwards;
     [self.lineLayer addAnimation:verticalAnimation forKey:@"verticalAnimation"];
+    
     self.initialFill = NO;
 }
 
@@ -437,7 +446,6 @@ NSString * const kBAFluidViewCMMotionUpdate = @"BAFluidViewCMMotionUpdate";
 }
 
 - (void)addTiltAnimations:(NSNotification *)note {
-    
     //grab data for roll from the notification
     //computing roll leads to a more stable value
     //http://stackoverflow.com/q/19239482/1408431
